@@ -2,8 +2,13 @@ package br.ufes.ceunes.p2pnetwork;
 
 public class App {
     public static void main( String[] args ) {
-    	System.out.println(args.length + args[0]);
-        Network net = new Network(args[0], args[1]);
-        System.out.println("Teste");
+      /* Arg[0] -> option like server client, server if first
+        Arg[1] -> interface de rede usada
+        Arg[2] -> ip do contato na rede caso cliente
+      */
+        Network net = new Network(args);
+        while(true) { //gambiarra
+          net.listener();
+        }
     }
 }
