@@ -16,25 +16,18 @@ import java.time.LocalDate;
 
 public class Network {
 
-	private InetAddress predecessorIp;
-	private InetAddress successorIp;
-	private InetAddress myIp;
-	private int lowerLimit;
-	private int upperLimit;
+	private Host predecessor;
+	private Host successor;
+	private Host host;
 	private int id;
 	private DatagramSocket server;
 	private DatagramSocket client;
 
 	public Network(String[] args) {
 
-		try {
-			myIp = this.getMyIP(args[1]);
-			System.out.println("My ip: " + myIp);
-		} catch (SocketException e) {
-
-		} catch (UnknownHostException e) {
-			System.out.println("Impossible to create network.");
-		}
+		predecessor = new Host();
+		successor = new Host();
+		host = new Host();
 
 		try {
 			server = new DatagramSocket(12345);
@@ -44,24 +37,35 @@ public class Network {
 		}
 
 		if (args[0].equals("server")) {
-			this.create();
+			this.create(args[1]);
 		} else {
 			try {
 				this.join(args[2]);
 			} catch (IOException e) {
-				System.out.println("buguei 2");
+
 			}
 		}
 
-
-
 	}
 
-	public void create() {
-		predecessor = successor = myIp;
+	public void create(String ip) {
 		id = generateId();
-		lowerLimit = 0;
-		upperLimit = (int) Math.pow(2, 32) - 1;
+		InetAddress hostIP;
+
+		try {
+			hostIP = getMyIP(ip);
+			host.setInfo(hostIP, id);
+			host.setLimit(0, ((int) Math.pow(2, 32) - 1));
+			System.out.println("My ip: " + host.getIp());
+		} catch (SocketException e) {
+
+		} catch (UnknownHostException e) {
+			System.out.println("Impossible to create network.");
+		}
+
+		successor.copyHost(host);
+		predecessor.copyHost(host);
+
 	}
 
 	public void update() {
@@ -91,14 +95,14 @@ public class Network {
 		byte[] buffer = new byte[4];
 		stream.read(buffer, 0, 4); // byte[], offset, length
 		int receivedId = Converter.bytesToInt(buffer);
-		/* TODO
-			Verificar limites inferior menor que zero
-		*/
-		if (id > lowerLimit && id <= upperLimit) {
-			upperLimit = receivedId - 1;
-			client.send(PacketFactory.createReplyJoin(originIp, 12345, (byte) 128, receivedId,
-			lowerLimit, myIp, upperLimit, myIp));
-		}
+		/*
+		 * TODO Verificar limites inferior menor que zero
+		 */
+		/*
+		 * if (id > lowerLimit && id <= upperLimit) { upperLimit = receivedId -
+		 * 1; client.send(PacketFactory.createReplyJoin(originIp, 12345, (byte)
+		 * 128, receivedId, lowerLimit, myIp, upperLimit, myIp)); }
+		 */
 	}
 
 	public void lookUp() {
