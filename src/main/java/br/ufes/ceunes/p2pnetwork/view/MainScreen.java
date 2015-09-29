@@ -11,6 +11,10 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+
+import br.ufes.ceunes.p2pnetwork.model.Host;
+import br.ufes.ceunes.p2pnetwork.model.Network;
+
 import java.awt.SystemColor;
 import java.awt.Color;
 import java.awt.event.ActionListener;
@@ -45,12 +49,14 @@ public class MainScreen {
 	private JButton btnLookup;
 	private InetAddress contact;
 	private Queue<DatagramPacket> queue;
+	private Network net;
 
 	/**
 	 * Create the application.
 	 */
-	public MainScreen(Queue<DatagramPacket> queue) {
+	public MainScreen(Queue<DatagramPacket> queue, Network net) {
 		this.queue = queue;
+		this.net = net;
 		initialize();
 	}
 
@@ -69,7 +75,6 @@ public class MainScreen {
 		frame.getContentPane().add(lblSelectInterface);
 
 		intfBox = new JComboBox(getInterfaces());
-
 
 		intfBox.setBounds(163, 7, 126, 24);
 		frame.getContentPane().add(intfBox);
@@ -169,7 +174,7 @@ public class MainScreen {
 		suc_id.setColumns(10);
 
 		setIp();
-		
+
 		listeners();
 
 	}
@@ -192,8 +197,10 @@ public class MainScreen {
 	private void listeners() {
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				net.createNode(getIp(intfBox.getSelectedIndex()));
 				btnCreate.setEnabled(false);
 				btnLookup.setEnabled(false);
+				setNeighborhood();
 			}
 		});
 
@@ -205,7 +212,8 @@ public class MainScreen {
 				try {
 					contact = InetAddress.getByName(ip);
 					btnCreate.setEnabled(false);
-					btnLookup.setEnabled(false);
+					//btnLookup.setEnabled(false);
+					setNeighborhood();
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -256,6 +264,16 @@ public class MainScreen {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	private void setNeighborhood() {
+		Host host = net.getAntecessor();
+		ant_ip.setText(host.getIp().getHostAddress());
+		ant_id.setText(Integer.toString(host.getId()));
+		
+		host = net.getSuccessor();
+		suc_ip.setText(host.getIp().getHostAddress());
+		suc_id.setText(Integer.toString(host.getId()));
 	}
 
 	public JFrame getFrame() {

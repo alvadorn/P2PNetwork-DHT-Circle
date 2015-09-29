@@ -17,7 +17,7 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainScreen window = new MainScreen(packets);
+					MainScreen window = new MainScreen(packets, net);
 					window.getFrame().setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

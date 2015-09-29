@@ -28,6 +28,10 @@ public class Network {
 	private DatagramSocket client;
 
 	public Network() {
+		predecessor = new Host();
+		successor = new Host();
+		host = new Host();
+		
 		try {
 			server = new DatagramSocket(12345);
 		} catch (SocketException e) {
@@ -53,7 +57,7 @@ public class Network {
 
 		
 		if (args[0].equals("server")) {
-			this.createNode();
+			//this.createNode();
 		} else {
 			try {
 				this.lookUp(args[2]);
@@ -64,8 +68,17 @@ public class Network {
 		}
 
 	}
+	
+	public Host getAntecessor() {
+		return predecessor;
+	}
+	
+	public Host getSuccessor() {
+		return successor;
+	}
 
-	public void createNode() {
+	public void createNode(InetAddress ip) {
+		host.setIp(ip);
 		successor.copyHost(host);
 		predecessor.copyHost(host);
 

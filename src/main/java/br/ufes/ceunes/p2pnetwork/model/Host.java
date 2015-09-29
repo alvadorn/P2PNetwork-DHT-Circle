@@ -23,6 +23,9 @@ public class Host {
 	public int getHighLimit() {
 		return upperLimit;
 	}
+	public void setIp(InetAddress ip) {
+		this.ip = ip;
+	}
 
 	public void setInfo(InetAddress ip, int id) {
 		this.ip = ip;
