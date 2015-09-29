@@ -30,7 +30,7 @@ public class Network {
 	public Network() {
 		predecessor = new Host();
 		successor = new Host();
-		host = new Host();
+		host = new Host(generateId());
 		
 		try {
 			server = new DatagramSocket(12345);
@@ -100,7 +100,6 @@ public class Network {
 		try {
 			hostIP = getMyIP(ip);
 			host.setInfo(hostIP, id);
-			host.setLimit(0, ((int) Math.pow(2, 32) - 1));
 			System.out.println("My ip: " + host.getIp());
 		} catch (SocketException e) {
 
@@ -151,7 +150,7 @@ public class Network {
 		System.out.println(ip);
 		InetAddress addr = Converter.stringToIP(ip);
 		System.out.println(addr);
-		DatagramPacket packet = PacketFactory.createSendLookUp(addr, 12345, host.getId(), host.getIp(), host.getId());
+		DatagramPacket packet = PacketFactory.createSendLookUp(addr, 12345, (int) host.getId(), host.getIp(),(int) host.getId());
 		client.send(packet);
 	}
 

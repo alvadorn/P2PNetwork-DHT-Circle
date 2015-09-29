@@ -27,4 +27,26 @@ public class PacketFactory {
 
 		return packet;
 	}
+
+	public static DatagramPacket createAnswerLookUp(InetAddress address, int port, int lookingId, int successorId,
+			InetAddress successorIp) {
+		byte[] data = new byte[13];
+		data[0] = (byte) 130;
+		System.arraycopy(Converter.intToBytes(lookingId), 0, data, 1, 4);
+		System.arraycopy(Converter.intToBytes(successorId), 0, data, 5, 4);
+		System.arraycopy(successorIp.getAddress(), 0, data, 9, 4);
+		DatagramPacket packet = new DatagramPacket(data, 13, address, port);
+		return packet;
+	}
+
+	public static DatagramPacket createRequireLookUp(InetAddress address, int port, int originId, InetAddress originIp,
+			int lookingId) {
+		byte[] data = new byte[13];
+		data[0] = 2;
+		System.arraycopy(Converter.intToBytes(originId), 0, data, 1, 4);
+		System.arraycopy(originIp.getAddress(), 0, data, 5, 4);
+		System.arraycopy(Converter.intToBytes(lookingId), 0, data, 9, 4);
+		DatagramPacket packet = new DatagramPacket(data, 13, address, port);
+		return packet;
+	}
 }

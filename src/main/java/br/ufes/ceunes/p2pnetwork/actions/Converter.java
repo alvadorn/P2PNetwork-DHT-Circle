@@ -30,5 +30,14 @@ public class Converter {
 		}
 		return ip;
 	}
+	
+	public static long intToUnsignedInt(int value) {
+		long result = value & 0xFFFFFFFF;
+		return result;
+	}
+	
+	public static long bytesToUnsignedInt(byte[] b) {
+		return Converter.intToUnsignedInt(Converter.bytesToInt(b));
+	}
 
 }

@@ -269,11 +269,11 @@ public class MainScreen {
 	private void setNeighborhood() {
 		Host host = net.getAntecessor();
 		ant_ip.setText(host.getIp().getHostAddress());
-		ant_id.setText(Integer.toString(host.getId()));
+		ant_id.setText(Long.toString(host.getId()));
 		
 		host = net.getSuccessor();
 		suc_ip.setText(host.getIp().getHostAddress());
-		suc_id.setText(Integer.toString(host.getId()));
+		suc_id.setText(Long.toString(host.getId()));
 	}
 
 	public JFrame getFrame() {
