@@ -1,4 +1,4 @@
-package br.ufes.ceunes.p2pnetwork;
+package br.ufes.ceunes.p2pnetwork.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -12,6 +12,10 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.regex.Pattern;
+
+import br.ufes.ceunes.p2pnetwork.actions.Converter;
+import br.ufes.ceunes.p2pnetwork.actions.PacketFactory;
+
 import java.time.LocalDate;
 
 public class Network {
@@ -23,11 +27,22 @@ public class Network {
 	private DatagramSocket server;
 	private DatagramSocket client;
 
+	public Network() {
+		try {
+			server = new DatagramSocket(12345);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public Network(String[] args) {
 
 		predecessor = new Host();
 		successor = new Host();
 		host = new Host();
+		
+		createHost(args[1]);
 
 		try {
 			server = new DatagramSocket(12345);
@@ -36,19 +51,36 @@ public class Network {
 			System.out.println("Port 12345 already in use.");
 		}
 
+		
 		if (args[0].equals("server")) {
-			this.create(args[1]);
+			this.createNode();
 		} else {
 			try {
-				this.join(args[2]);
+				this.lookUp(args[2]);
 			} catch (IOException e) {
-
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
 	}
 
-	public void create(String ip) {
+	public void createNode() {
+		successor.copyHost(host);
+		predecessor.copyHost(host);
+
+	}
+	
+	public void send(DatagramPacket packet) {
+		try {
+			server.send(packet);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void createHost(String ip) {
 		id = generateId();
 		InetAddress hostIP;
 
@@ -62,10 +94,6 @@ public class Network {
 		} catch (UnknownHostException e) {
 			System.out.println("Impossible to create network.");
 		}
-
-		successor.copyHost(host);
-		predecessor.copyHost(host);
-
 	}
 
 	public void update() {
@@ -82,7 +110,7 @@ public class Network {
 			contact = InetAddress.getByName(ip);
 			id = generateId();
 			System.out.println(id);
-			client.send(PacketFactory.createSendJoin(contact, 12345, (byte) 0, id));
+			client.send(PacketFactory.createSendJoin(contact, 12345,  id));
 
 		} catch (UnknownHostException e) {
 			System.out.println("Bugueii");
@@ -90,6 +118,7 @@ public class Network {
 		}
 
 	}
+	
 
 	public void join(ByteArrayInputStream stream, InetAddress originIp) {
 		byte[] buffer = new byte[4];
@@ -105,8 +134,12 @@ public class Network {
 		 */
 	}
 
-	public void lookUp() {
-
+	public void lookUp(String ip) throws IOException {
+		System.out.println(ip);
+		InetAddress addr = Converter.stringToIP(ip);
+		System.out.println(addr);
+		DatagramPacket packet = PacketFactory.createSendLookUp(addr, 12345, host.getId(), host.getIp(), host.getId());
+		client.send(packet);
 	}
 
 	public void lookUp(ByteArrayInputStream stream) {

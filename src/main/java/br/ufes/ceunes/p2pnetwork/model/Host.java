@@ -1,4 +1,4 @@
-package br.ufes.ceunes.p2pnetwork;
+package br.ufes.ceunes.p2pnetwork.model;
 
 import java.net.InetAddress;
 

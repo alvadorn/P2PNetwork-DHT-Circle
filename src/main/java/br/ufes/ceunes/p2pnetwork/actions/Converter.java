@@ -1,5 +1,7 @@
-package br.ufes.ceunes.p2pnetwork;
+package br.ufes.ceunes.p2pnetwork.actions;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 public class Converter {
@@ -16,6 +18,17 @@ public class Converter {
 			value += (b[i] & 0x000000FF) << shift;
 		}
 		return value;
+	}
+
+	public static InetAddress stringToIP(String str) {
+		InetAddress ip = null;
+		try {
+			ip = InetAddress.getByName(str);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ip;
 	}
 
 }
