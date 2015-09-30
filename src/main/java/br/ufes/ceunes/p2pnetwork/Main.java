@@ -11,7 +11,7 @@ public class Main {
 	public static void main(String[] args) {
 		
 		ConcurrentLinkedQueue<DatagramPacket> packets = new ConcurrentLinkedQueue<>();
-		Network net = new Network();
+		Network net = new Network(packets);
 		
 		
 		EventQueue.invokeLater(new Runnable() {

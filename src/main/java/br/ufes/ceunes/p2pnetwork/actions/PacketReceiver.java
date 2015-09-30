@@ -58,15 +58,15 @@ public class PacketReceiver {
 
 	}
 
-	public static void requireJoin() {
+	public void requireJoin(ByteArrayInputStream stream) {
 
 	}
 
-	public static void requireLeave() {
+	public void requireLeave(ByteArrayInputStream stream) {
 
 	}
 
-	public static void requireUpdate() {
+	public void requireUpdate(ByteArrayInputStream stream) {
 
 	}
 

@@ -10,11 +10,13 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Queue;
 import java.util.Random;
 import java.util.regex.Pattern;
 
 import br.ufes.ceunes.p2pnetwork.actions.Converter;
 import br.ufes.ceunes.p2pnetwork.actions.PacketFactory;
+import br.ufes.ceunes.p2pnetwork.actions.PacketReceiver;
 
 import java.time.LocalDate;
 
@@ -23,58 +25,35 @@ public class Network {
 	private Host predecessor;
 	private Host successor;
 	private Host host;
-	private int id;
+	private PacketReceiver receiver;
 	private DatagramSocket server;
 	private DatagramSocket client;
 
-	public Network() {
+	public Network(Queue<DatagramPacket> queue) {
 		predecessor = new Host();
 		successor = new Host();
 		host = new Host(generateId());
-		
-		try {
-			server = new DatagramSocket(12345);
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public Network(String[] args) {
-
-		predecessor = new Host();
-		successor = new Host();
-		host = new Host();
-		
-		createHost(args[1]);
+		receiver = new PacketReceiver(host, successor, predecessor, queue);
 
 		try {
 			server = new DatagramSocket(12345);
 			client = new DatagramSocket();
 		} catch (SocketException e) {
-			System.out.println("Port 12345 already in use.");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		
-		if (args[0].equals("server")) {
-			//this.createNode();
-		} else {
-			try {
-				this.lookUp(args[2]);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
 	}
-	
+
 	public Host getAntecessor() {
 		return predecessor;
 	}
-	
+
 	public Host getSuccessor() {
 		return successor;
+	}
+	
+	public Host getHost() {
+		return host;
 	}
 
 	public void createNode(InetAddress ip) {
@@ -83,86 +62,13 @@ public class Network {
 		predecessor.copyHost(host);
 
 	}
-	
+
 	public void send(DatagramPacket packet) {
 		try {
-			server.send(packet);
-		} catch(IOException e) {
+			client.send(packet);
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-	}
-	
-	private void createHost(String ip) {
-		id = generateId();
-		InetAddress hostIP;
-
-		try {
-			hostIP = getMyIP(ip);
-			host.setInfo(hostIP, id);
-			System.out.println("My ip: " + host.getIp());
-		} catch (SocketException e) {
-
-		} catch (UnknownHostException e) {
-			System.out.println("Impossible to create network.");
-		}
-	}
-
-	public void update() {
-
-	}
-
-	public void update(ByteArrayInputStream stream) {
-
-	}
-
-	public void join(String ip) throws IOException {
-		InetAddress contact;
-		try {
-			contact = InetAddress.getByName(ip);
-			id = generateId();
-			System.out.println(id);
-			client.send(PacketFactory.createSendJoin(contact, 12345,  id));
-
-		} catch (UnknownHostException e) {
-			System.out.println("Bugueii");
-			e.printStackTrace();
-		}
-
-	}
-	
-
-	public void join(ByteArrayInputStream stream, InetAddress originIp) {
-		byte[] buffer = new byte[4];
-		stream.read(buffer, 0, 4); // byte[], offset, length
-		int receivedId = Converter.bytesToInt(buffer);
-		/*
-		 * TODO Verificar limites inferior menor que zero
-		 */
-		/*
-		 * if (id > lowerLimit && id <= upperLimit) { upperLimit = receivedId -
-		 * 1; client.send(PacketFactory.createReplyJoin(originIp, 12345, (byte)
-		 * 128, receivedId, lowerLimit, myIp, upperLimit, myIp)); }
-		 */
-	}
-
-	public void lookUp(String ip) throws IOException {
-		System.out.println(ip);
-		InetAddress addr = Converter.stringToIP(ip);
-		System.out.println(addr);
-		DatagramPacket packet = PacketFactory.createSendLookUp(addr, 12345, (int) host.getId(), host.getIp(),(int) host.getId());
-		client.send(packet);
-	}
-
-	public void lookUp(ByteArrayInputStream stream) {
-
-	}
-
-	public void leave() {
-
-	}
-
-	public void leave(ByteArrayInputStream stream) {
 
 	}
 
@@ -192,16 +98,16 @@ public class Network {
 			byte code = (byte) stream.read();
 			switch (code) {
 			case 0:
-				this.join(stream, packet.getAddress());
+				receiver.requireJoin(stream);
 				break;
 			case 1:
-				this.leave(stream);
+				receiver.requireLeave(stream);
 				break;
 			case 2:
-				this.lookUp(stream);
+				receiver.requireLookUp(stream);
 				break;
 			case 3:
-				this.update(stream);
+				receiver.requireUpdate(stream);
 				break;
 			default:
 				System.out.println("It seems something went wrong. Operation code invalid!");

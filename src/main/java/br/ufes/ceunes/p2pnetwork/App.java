@@ -8,9 +8,9 @@ public class App {
         Arg[1] -> interface de rede usada
         Arg[2] -> ip do contato na rede caso cliente
       */
-        Network net = new Network(args);
+        //Network net = new Network(args);
         while(true) { //gambiarra
-          net.listener();
+         // net.listener();
         }
     }
 }

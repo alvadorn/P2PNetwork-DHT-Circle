@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
+import br.ufes.ceunes.p2pnetwork.actions.PacketFactory;
 import br.ufes.ceunes.p2pnetwork.model.Host;
 import br.ufes.ceunes.p2pnetwork.model.Network;
 
@@ -177,6 +178,8 @@ public class MainScreen {
 
 		listeners();
 
+		self_id.setText(Long.toString(net.getHost().getId()));
+
 	}
 
 	private Object[] getInterfaces() {
@@ -212,8 +215,10 @@ public class MainScreen {
 				try {
 					contact = InetAddress.getByName(ip);
 					btnCreate.setEnabled(false);
-					//btnLookup.setEnabled(false);
-					setNeighborhood();
+					queue.add(PacketFactory.createRequireLookUp(contact, 12345, (int) net.getHost().getId(),
+							net.getHost().getIp(), (int) net.getHost().getId()));
+					// btnLookup.setEnabled(false);
+					//setNeighborhood();
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -243,6 +248,7 @@ public class MainScreen {
 		int selected = intfBox.getSelectedIndex();
 		InetAddress ip = getIp(selected);
 		if (ip != null) {
+			net.getHost().setIp(ip);
 			self_ip.setText(ip.getHostAddress());
 		}
 	}
@@ -265,12 +271,12 @@ public class MainScreen {
 		}
 		return null;
 	}
-	
+
 	private void setNeighborhood() {
 		Host host = net.getAntecessor();
 		ant_ip.setText(host.getIp().getHostAddress());
 		ant_id.setText(Long.toString(host.getId()));
-		
+
 		host = net.getSuccessor();
 		suc_ip.setText(host.getIp().getHostAddress());
 		suc_id.setText(Long.toString(host.getId()));
