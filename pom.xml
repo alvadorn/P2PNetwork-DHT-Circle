@@ -25,7 +25,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
   <plugins>
     <plugin>
@@ -38,7 +38,7 @@
           <manifest>
             <addClasspath>true</addClasspath>
             <classpathPrefix>lib/</classpathPrefix>
-            <mainClass>br.ufes.ceunes.p2pnetwork.App</mainClass>
+            <mainClass>br.ufes.ceunes.p2pnetwork.Main</mainClass>
           </manifest>
         </archive>
       </configuration>
