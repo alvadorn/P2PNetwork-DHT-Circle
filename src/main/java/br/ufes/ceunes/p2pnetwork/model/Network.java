@@ -107,7 +107,7 @@ public class Network {
 				receiver.requireLookUp(stream);
 				break;
 			case 3:
-				receiver.requireUpdate(stream);
+				receiver.requireUpdate(stream, packet.getAddress());
 				break;
 			default:
 				System.out.println("It seems something went wrong. Operation code invalid!");
