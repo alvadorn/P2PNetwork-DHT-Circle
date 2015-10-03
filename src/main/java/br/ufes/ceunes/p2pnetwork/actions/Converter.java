@@ -32,7 +32,7 @@ public class Converter {
 	}
 	
 	public static long intToUnsignedInt(int value) {
-		long result = value & 0xFFFFFFFF;
+		long result = value & 0xFFFFFFFFL;
 		return result;
 	}
 	

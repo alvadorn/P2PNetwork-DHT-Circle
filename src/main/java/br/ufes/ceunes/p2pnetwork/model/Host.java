@@ -7,6 +7,7 @@ import br.ufes.ceunes.p2pnetwork.actions.Converter;
 public class Host {
 	private InetAddress ip;
 	private int id;
+	final long limitUp;
 
 	public InetAddress getIp() {
 		return this.ip;
@@ -39,15 +40,18 @@ public class Host {
 	}
 
 	public Host() {
-
+		limitUp = (long)(Math.pow(2, 32) - 1) & 0xFFFFFFFFL;
 	}
 
 	public boolean isNext(long lookingId, long successorId) {
+		if (successorId == this.id) {
+			return true;
+		}
 		if (this.id > successorId) {
-			if (this.id <= lookingId || successorId > lookingId) {
+			if ((lookingId >= id && id <= limitUp) || (0 >= lookingId && lookingId < successorId)){
 				return true;
 			}
-		} else if (this.id >= lookingId && successorId < lookingId) {
+		} else if (lookingId >= this.id &&  lookingId < successorId) {
 			return true;
 		}
 		return false;

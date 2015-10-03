@@ -67,7 +67,7 @@ public class PacketFactory {
 	public static DatagramPacket createSendUpdate(InetAddress address, int port, int originId, int sucessorId,
 			InetAddress sucessorIp) {
 		byte[] data = new byte[13];
-		data[0] = (byte) 131;
+		data[0] = (byte) 3;
 		System.arraycopy(Converter.intToBytes(originId), 0, data, 1, 4);
 		System.arraycopy(Converter.intToBytes(sucessorId), 0, data, 5, 4);
 		System.arraycopy(sucessorIp.getAddress(), 0, data, 9, 4);
@@ -77,9 +77,9 @@ public class PacketFactory {
 
 	public static DatagramPacket createAnswerUpdate(InetAddress address, int port, byte confirmation, int originId) {
 		byte[] data = new byte[6];
-		data[0] = (byte) 3;
-		System.arraycopy(confirmation, 0, data, 1, 4);
-		System.arraycopy(Converter.intToBytes(originId), 0, data, 5, 4);
+		data[0] = (byte) 131;
+		data[1] = confirmation;
+		System.arraycopy(Converter.intToBytes(originId), 0, data, 2, 4);
 		DatagramPacket packet = new DatagramPacket(data, 6, address, port);
 		return packet;
 	}
@@ -87,7 +87,7 @@ public class PacketFactory {
 	public static DatagramPacket createSendLeave(InetAddress address, int port, int leavingId, int leavingSucessorId,
 			InetAddress leavingSucessorIp, int leavingAntecessorId, InetAddress leavingAntecessorIp) {
 		byte[] data = new byte[21];
-		data[0] = (byte) 129;
+		data[0] = (byte) 1;
 		System.arraycopy(Converter.intToBytes(leavingId), 0, data, 1, 4);
 		System.arraycopy(Converter.intToBytes(leavingSucessorId), 0, data, 5, 4);
 		System.arraycopy(leavingSucessorIp.getAddress(), 0, data, 9, 4);
@@ -99,7 +99,7 @@ public class PacketFactory {
 
 	public static DatagramPacket createAnswerLeave(InetAddress address, int port, int originId) {
 		byte[] data = new byte[5];
-		data[0] = (byte) 1;
+		data[0] = (byte) 129;
 		System.arraycopy(Converter.intToBytes(originId), 0, data, 1, 4);
 		DatagramPacket packet = new DatagramPacket(data, 5, address, port);
 		return packet;

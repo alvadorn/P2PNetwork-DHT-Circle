@@ -51,7 +51,7 @@ public class Network {
 	public Host getSuccessor() {
 		return successor;
 	}
-	
+
 	public Host getHost() {
 		return host;
 	}
@@ -95,7 +95,7 @@ public class Network {
 		try {
 			server.receive(packet);
 			ByteArrayInputStream stream = new ByteArrayInputStream(packet.getData());
-			byte code = (byte) stream.read();
+			int code = stream.read();
 			switch (code) {
 			case 0:
 				receiver.requireJoin(stream, packet.getAddress());
@@ -108,6 +108,18 @@ public class Network {
 				break;
 			case 3:
 				receiver.requireUpdate(stream, packet.getAddress());
+				break;
+			case 128:
+				receiver.answerJoin(stream);
+				break;
+			case 129:
+				receiver.answerLeave(stream);
+				break;
+			case 130:
+				receiver.answerLookUp(stream);
+				break;
+			case 131:
+				receiver.answerUpdate(stream);
 				break;
 			default:
 				System.out.println("It seems something went wrong. Operation code invalid!");

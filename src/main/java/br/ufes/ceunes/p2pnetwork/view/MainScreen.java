@@ -180,6 +180,22 @@ public class MainScreen {
 
 		self_id.setText(Long.toString(net.getHost().getId()));
 
+		JButton btnNewButton = new JButton("Force ID");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String strId = JOptionPane.showInputDialog(null, "Set ID!", "Enter you ID",
+						JOptionPane.QUESTION_MESSAGE);
+				int id = Integer.parseInt(strId);
+				net.getHost().setId(id);
+				if (net.getHost().getId() == net.getAntecessor().getId()) {
+					net.getAntecessor().setId(id);
+					net.getSuccessor().setId(id);
+				}
+			}
+		});
+		btnNewButton.setBounds(381, 75, 117, 25);
+		frame.getContentPane().add(btnNewButton);
+
 	}
 
 	private Object[] getInterfaces() {
@@ -218,7 +234,7 @@ public class MainScreen {
 					queue.add(PacketFactory.createRequireLookUp(contact, 12345, (int) net.getHost().getId(),
 							net.getHost().getIp(), (int) net.getHost().getId()));
 					// btnLookup.setEnabled(false);
-					//setNeighborhood();
+					// setNeighborhood();
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -274,12 +290,20 @@ public class MainScreen {
 
 	private void setNeighborhood() {
 		Host host = net.getAntecessor();
-		ant_ip.setText(host.getIp().getHostAddress());
-		ant_id.setText(Long.toString(host.getId()));
+		if (host.getIp() != null) {
+			ant_ip.setText(host.getIp().getHostAddress());
+			ant_id.setText(Long.toString(host.getId()));
 
-		host = net.getSuccessor();
-		suc_ip.setText(host.getIp().getHostAddress());
-		suc_id.setText(Long.toString(host.getId()));
+			host = net.getSuccessor();
+			suc_ip.setText(host.getIp().getHostAddress());
+			suc_id.setText(Long.toString(host.getId()));
+
+		} else {
+			ant_id.setText("");
+			suc_id.setText("");
+			ant_ip.setText("");
+			suc_ip.setText("");
+		}
 	}
 
 	public JFrame getFrame() {
@@ -288,5 +312,10 @@ public class MainScreen {
 
 	public void setFrame(JFrame frame) {
 		this.frame = frame;
+	}
+
+	public void refresh() {
+		setNeighborhood();
+		self_id.setText(Long.toString(net.getHost().getId()));
 	}
 }
