@@ -40,15 +40,14 @@ public class PacketReceiver {
 
 		boolean make = false;
 
-		if (host.getId() > successor.getId()) {
-			if (host.getId() <= lookingId || successor.getId() > lookingId) {
-				make = true;
-			}
-		} else if (host.getId() >= lookingId && successor.getId() < lookingId) {
-			make = true;
-		}
+		/*
+		 * if (host.getId() > successor.getId()) { if (host.getId() <= lookingId
+		 * || successor.getId() > lookingId) { make = true; } } else if
+		 * (host.getId() >= lookingId && successor.getId() < lookingId) { make =
+		 * true; }
+		 */
 
-		if (make) {
+		if (host.isNext(lookingId, successor.getId())) {
 			packets.add(PacketFactory.createAnswerLookUp(originIp, port, (int) lookingId, (int) successor.getId(),
 					successor.getIp()));
 		} else {
@@ -58,8 +57,18 @@ public class PacketReceiver {
 
 	}
 
-	public void requireJoin(ByteArrayInputStream stream) {
-
+	public void requireJoin(ByteArrayInputStream stream, InetAddress fromIp) {
+		byte buffer[] = new byte[4];
+		stream.read(buffer, 0, 4);
+		long lookingId = Converter.bytesToUnsignedInt(buffer);
+		byte failure;
+		if (host.isNext(lookingId, successor.getId()) && host.getId() != lookingId) {
+			failure = 0;
+		} else {
+			failure = 1;
+		}
+		packets.add(PacketFactory.createAnswerJoin(fromIp, port, failure, (int) successor.getId(), successor.getIp(),
+				(int) antecessor.getId(), antecessor.getIp()));
 	}
 
 	public void requireLeave(ByteArrayInputStream stream) {

@@ -15,7 +15,6 @@ public class Host {
 	public long getId() {
 		return Converter.intToUnsignedInt(this.id);
 	}
-	
 
 	public void setIp(InetAddress ip) {
 		this.ip = ip;
@@ -41,5 +40,16 @@ public class Host {
 
 	public Host() {
 
+	}
+
+	public boolean isNext(long lookingId, long successorId) {
+		if (this.id > successorId) {
+			if (this.id <= lookingId || successorId > lookingId) {
+				return true;
+			}
+		} else if (this.id >= lookingId && successorId < lookingId) {
+			return true;
+		}
+		return false;
 	}
 }

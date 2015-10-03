@@ -98,7 +98,7 @@ public class Network {
 			byte code = (byte) stream.read();
 			switch (code) {
 			case 0:
-				receiver.requireJoin(stream);
+				receiver.requireJoin(stream, packet.getAddress());
 				break;
 			case 1:
 				receiver.requireLeave(stream);
