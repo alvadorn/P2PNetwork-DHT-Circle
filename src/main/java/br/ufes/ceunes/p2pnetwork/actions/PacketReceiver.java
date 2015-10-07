@@ -150,7 +150,9 @@ public class PacketReceiver {
 
 	public void answerLookUp(ByteArrayInputStream stream) {
 		byte buffer[] = new byte[4];
-		stream.read(buffer, 8, 4);
+		stream.read(buffer, 0, 4);
+		stream.read(buffer, 0, 4);
+		stream.read(buffer, 0, 4);
 		InetAddress successorIp = null;
 		try {
 			successorIp = InetAddress.getByAddress(buffer);
