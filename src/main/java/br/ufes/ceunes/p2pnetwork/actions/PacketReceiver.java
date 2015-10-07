@@ -70,6 +70,10 @@ public class PacketReceiver {
 			successor.setId((int) successorId);
 			packets.add(PacketFactory.createSendUpdate(antecessor.getIp(), port, (int) host.getId(), (int) host.getId(),
 					host.getIp()));
+		} else {
+			int newId = Util.generateId();
+			host.setId(newId);
+			packets.add(PacketFactory.createRequireLookUp(successorIp, port, newId, host.getIp(), newId));
 		}
 
 	}

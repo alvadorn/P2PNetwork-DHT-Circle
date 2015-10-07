@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import br.ufes.ceunes.p2pnetwork.actions.Converter;
 import br.ufes.ceunes.p2pnetwork.actions.PacketFactory;
 import br.ufes.ceunes.p2pnetwork.actions.PacketReceiver;
+import br.ufes.ceunes.p2pnetwork.actions.Util;
 
 import java.time.LocalDate;
 
@@ -33,7 +34,7 @@ public class Network {
 	public Network(Queue<DatagramPacket> queue) {
 		predecessor = new Host();
 		successor = new Host();
-		host = new Host(generateId());
+		host = new Host(Util.generateId());
 		receiver = new PacketReceiver(host, successor, predecessor, queue);
 
 		try {
@@ -133,11 +134,6 @@ public class Network {
 		} catch (IOException e) {
 			System.out.println("No packet captured");
 		}
-	}
-
-	private int generateId() {
-		Random r = new Random(System.currentTimeMillis());
-		return r.nextInt();
 	}
 
 }
