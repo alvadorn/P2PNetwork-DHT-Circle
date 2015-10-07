@@ -40,18 +40,20 @@ public class Host {
 	}
 
 	public Host() {
-		limitUp = (long)(Math.pow(2, 32) - 1) & 0xFFFFFFFFL;
+		limitUp = (long) (Math.pow(2, 32) - 1) & 0xFFFFFFFFL;
 	}
 
 	public boolean isNext(long lookingId, long successorId) {
-		if (successorId == this.id) {
+		long selfId = Converter.intToUnsignedInt(this.id);
+		if (successorId == selfId) {
 			return true;
 		}
-		if (this.id > successorId) {
-			if ((lookingId >= id && id <= limitUp) || (0 >= lookingId && lookingId < successorId)){
+		if (selfId > successorId) {
+			
+			if ((lookingId >= selfId && selfId <= limitUp) || (lookingId >= 0 && lookingId < successorId)) {
 				return true;
 			}
-		} else if (lookingId >= this.id &&  lookingId < successorId) {
+		} else if (lookingId >= selfId && lookingId < successorId) {
 			return true;
 		}
 		return false;

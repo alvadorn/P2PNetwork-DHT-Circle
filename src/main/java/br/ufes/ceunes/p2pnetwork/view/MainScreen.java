@@ -34,10 +34,11 @@ import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
 
 public class MainScreen {
 
-	private JFrame frame;
+	private JFrame frmDhtCircular;
 	private JTextField self_ip;
 	private JTextField self_id;
 	private JTextField ant_ip;
@@ -65,113 +66,114 @@ public class MainScreen {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 538, 268);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmDhtCircular = new JFrame();
+		frmDhtCircular.setTitle("DHT Circular - Powered by Igor and Nikolas");
+		frmDhtCircular.setResizable(false);
+		frmDhtCircular.setBounds(100, 100, 538, 267);
+		frmDhtCircular.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmDhtCircular.getContentPane().setLayout(null);
 
 		JLabel lblSelectInterface = new JLabel("Select Interface:");
 		lblSelectInterface.setBounds(29, 12, 126, 15);
-		frame.getContentPane().add(lblSelectInterface);
+		frmDhtCircular.getContentPane().add(lblSelectInterface);
 
 		intfBox = new JComboBox(getInterfaces());
 
 		intfBox.setBounds(163, 7, 126, 24);
-		frame.getContentPane().add(intfBox);
+		frmDhtCircular.getContentPane().add(intfBox);
 
 		JSeparator separator = new JSeparator();
 		separator.setBounds(29, 41, 483, 15);
-		frame.getContentPane().add(separator);
+		frmDhtCircular.getContentPane().add(separator);
 
 		JLabel lblMyIp = new JLabel("My IP:");
 		lblMyIp.setBounds(29, 53, 70, 15);
-		frame.getContentPane().add(lblMyIp);
+		frmDhtCircular.getContentPane().add(lblMyIp);
 
 		self_ip = new JTextField();
 		self_ip.setEditable(false);
 		self_ip.setBounds(84, 51, 134, 19);
-		frame.getContentPane().add(self_ip);
+		frmDhtCircular.getContentPane().add(self_ip);
 		self_ip.setColumns(10);
 
 		JLabel lblId = new JLabel("ID:");
 		lblId.setBounds(29, 80, 70, 15);
-		frame.getContentPane().add(lblId);
+		frmDhtCircular.getContentPane().add(lblId);
 
 		self_id = new JTextField();
 		self_id.setBounds(84, 78, 134, 19);
-		frame.getContentPane().add(self_id);
+		frmDhtCircular.getContentPane().add(self_id);
 		self_id.setColumns(10);
 
 		btnCreate = new JButton("Create");
 
 		btnCreate.setBounds(249, 48, 117, 25);
-		frame.getContentPane().add(btnCreate);
+		frmDhtCircular.getContentPane().add(btnCreate);
 
 		btnLookup = new JButton("Lookup");
 		btnLookup.setBounds(249, 75, 117, 25);
-		frame.getContentPane().add(btnLookup);
+		frmDhtCircular.getContentPane().add(btnLookup);
 
 		btnLeave = new JButton("Leave");
 
 		btnLeave.setBounds(381, 48, 117, 25);
-		frame.getContentPane().add(btnLeave);
+		frmDhtCircular.getContentPane().add(btnLeave);
 
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBounds(29, 112, 483, 2);
-		frame.getContentPane().add(separator_1);
+		frmDhtCircular.getContentPane().add(separator_1);
 
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setOrientation(SwingConstants.VERTICAL);
 		separator_2.setBounds(274, 130, 23, 86);
-		frame.getContentPane().add(separator_2);
+		frmDhtCircular.getContentPane().add(separator_2);
 
 		JLabel lblAntecessor = new JLabel("Antecessor");
 		lblAntecessor.setBounds(120, 127, 111, 15);
-		frame.getContentPane().add(lblAntecessor);
+		frmDhtCircular.getContentPane().add(lblAntecessor);
 
 		JLabel lblIp = new JLabel("IP:");
 		lblIp.setBounds(29, 156, 70, 15);
-		frame.getContentPane().add(lblIp);
+		frmDhtCircular.getContentPane().add(lblIp);
 
 		ant_ip = new JTextField();
 		ant_ip.setEditable(false);
 		ant_ip.setBounds(68, 154, 134, 19);
-		frame.getContentPane().add(ant_ip);
+		frmDhtCircular.getContentPane().add(ant_ip);
 		ant_ip.setColumns(10);
 
 		JLabel lblId_1 = new JLabel("ID:");
 		lblId_1.setBounds(29, 183, 70, 15);
-		frame.getContentPane().add(lblId_1);
+		frmDhtCircular.getContentPane().add(lblId_1);
 
 		ant_id = new JTextField();
 		ant_id.setEditable(false);
 		ant_id.setBounds(68, 183, 134, 19);
-		frame.getContentPane().add(ant_id);
+		frmDhtCircular.getContentPane().add(ant_id);
 		ant_id.setColumns(10);
 
 		JLabel lblSuccessor = new JLabel("Successor");
 		lblSuccessor.setBounds(402, 126, 96, 15);
-		frame.getContentPane().add(lblSuccessor);
+		frmDhtCircular.getContentPane().add(lblSuccessor);
 
 		JLabel lblIp_1 = new JLabel("IP:");
 		lblIp_1.setBounds(315, 156, 70, 15);
-		frame.getContentPane().add(lblIp_1);
+		frmDhtCircular.getContentPane().add(lblIp_1);
 
 		suc_ip = new JTextField();
 		suc_ip.setEditable(false);
 		suc_ip.setBounds(384, 154, 114, 19);
-		frame.getContentPane().add(suc_ip);
+		frmDhtCircular.getContentPane().add(suc_ip);
 		suc_ip.setColumns(10);
 
 		JLabel lblId_2 = new JLabel("ID:");
 		lblId_2.setBounds(315, 183, 70, 15);
-		frame.getContentPane().add(lblId_2);
+		frmDhtCircular.getContentPane().add(lblId_2);
 
 		suc_id = new JTextField();
 		suc_id.setEditable(false);
 		suc_id.setBounds(384, 181, 114, 19);
-		frame.getContentPane().add(suc_id);
+		frmDhtCircular.getContentPane().add(suc_id);
 		suc_id.setColumns(10);
 
 		setIp();
@@ -194,7 +196,12 @@ public class MainScreen {
 			}
 		});
 		btnNewButton.setBounds(381, 75, 117, 25);
-		frame.getContentPane().add(btnNewButton);
+		frmDhtCircular.getContentPane().add(btnNewButton);
+		
+		JLabel lbPowered = new JLabel("Desenvolvido por Igor Sant'ana e Nikolas Serafini");
+		lbPowered.setFont(new Font("Dialog", Font.BOLD, 8));
+		lbPowered.setBounds(295, 210, 249, 15);
+		frmDhtCircular.getContentPane().add(lbPowered);
 
 	}
 
@@ -316,11 +323,11 @@ public class MainScreen {
 	}
 
 	public JFrame getFrame() {
-		return frame;
+		return frmDhtCircular;
 	}
 
 	public void setFrame(JFrame frame) {
-		this.frame = frame;
+		this.frmDhtCircular = frame;
 	}
 
 	public void refresh() {

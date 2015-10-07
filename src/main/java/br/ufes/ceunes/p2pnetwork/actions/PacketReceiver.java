@@ -95,21 +95,39 @@ public class PacketReceiver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		stream.read(buffer, 0, 4);
+		long beforeId = Converter.bytesToInt(buffer);
+		stream.read(buffer, 0, 4);
+		InetAddress beforeIp = null;
+		try {
+			beforeIp = InetAddress.getByAddress(buffer);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		if (id > selfId) {
+		System.out.println("Suc: " + successor.getId() + " Ant: " + antecessor.getId() + " id: " + host.getId()
+				+ " nextId: " + nextId + " beforeId: " + beforeId);
+
+		if (nextId == beforeId) {
+			successor.setId((int) nextId);
+			successor.setIp(nextIp);
+			antecessor.setId((int) beforeId);
+			antecessor.setIp(beforeIp);
+
+		} else if (selfId != nextId) {
 			successor.setId((int) nextId);
 			successor.setIp(nextIp);
 		} else {
-			stream.read(buffer, 0, 4);
-			antecessor.setId(Converter.bytesToInt(buffer));
-			stream.read(buffer, 0, 4);
-			try {
-				nextIp = InetAddress.getByAddress(buffer);
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			antecessor.setId((int) beforeId);
+			antecessor.setIp(beforeIp);
 		}
+
+		/*
+		 * if (id > successor.getId() || id > selfId) { successor.setId((int)
+		 * nextId); successor.setIp(nextIp); } else { antecessor.setId((int)
+		 * beforeId); antecessor.setIp(beforeIp); }
+		 */
 
 		packets.add(PacketFactory.createAnswerLeave(address, port, (int) selfId));
 	}
@@ -143,8 +161,8 @@ public class PacketReceiver {
 		 */
 
 		if (host.isNext(lookingId, successor.getId())) {
-			packets.add(PacketFactory.createAnswerLookUp(originIp, port, (int) lookingId, (int) host.getId(),
-					host.getIp()));
+			packets.add(PacketFactory.createAnswerLookUp(originIp, port, (int) lookingId, (int) successor.getId(),
+					successor.getIp()));
 		} else {
 			packets.add(PacketFactory.createRequireLookUp(successor.getIp(), port, (int) originId, originIp,
 					(int) lookingId));
