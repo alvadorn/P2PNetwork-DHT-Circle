@@ -249,6 +249,15 @@ public class MainScreen {
 			public void actionPerformed(ActionEvent e) {
 				btnCreate.setEnabled(true);
 				btnLookup.setEnabled(true);
+				Host antecessor = net.getAntecessor();
+				Host successor = net.getSuccessor();
+				// Sending message to antecessor
+				queue.add(PacketFactory.createSendLeave(antecessor.getIp(), net.getPort(), (int) net.getHost().getId(),
+						(int) successor.getId(), successor.getIp(), (int) antecessor.getId(), antecessor.getIp()));
+
+				// Sending message to successor
+				queue.add(PacketFactory.createSendLeave(successor.getIp(), net.getPort(), (int) net.getHost().getId(),
+						(int) successor.getId(), successor.getIp(), (int) antecessor.getId(), antecessor.getIp()));
 			}
 
 		});

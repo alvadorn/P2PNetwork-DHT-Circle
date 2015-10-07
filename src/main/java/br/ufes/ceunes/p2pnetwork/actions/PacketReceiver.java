@@ -74,11 +74,43 @@ public class PacketReceiver {
 
 	}
 
-	public void requireLeave(ByteArrayInputStream stream) {
+	public void requireLeave(ByteArrayInputStream stream, InetAddress address) {
+		long selfId = host.getId();
+		byte buffer[] = new byte[4];
 
+		stream.read(buffer, 0, 4);
+
+		long id = Converter.bytesToUnsignedInt(buffer);
+		stream.read(buffer, 0, 4);
+		long nextId = Converter.bytesToUnsignedInt(buffer);
+		stream.read(buffer, 0, 4);
+		InetAddress nextIp = null;
+		try {
+			nextIp = InetAddress.getByAddress(buffer);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (id > selfId) {
+			successor.setId((int) nextId);
+			successor.setIp(nextIp);
+		} else {
+			stream.read(buffer, 0, 4);
+			antecessor.setId(Converter.bytesToInt(buffer));
+			stream.read(buffer, 0, 4);
+			try {
+				nextIp = InetAddress.getByAddress(buffer);
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		packets.add(PacketFactory.createAnswerLeave(address, port, (int) selfId));
 	}
 
-	public static void answerLeave() {
+	public void answerLeave(ByteArrayInputStream stream) {
 
 	}
 
@@ -147,7 +179,7 @@ public class PacketReceiver {
 		packets.add(PacketFactory.createAnswerUpdate(fromIp, port, (byte) 1, (int) originId));
 	}
 
-	public static void answerUpdate() {
+	public void answerUpdate(ByteArrayInputStream stream) {
 
 	}
 

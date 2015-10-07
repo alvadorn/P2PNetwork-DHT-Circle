@@ -28,6 +28,7 @@ public class Network {
 	private PacketReceiver receiver;
 	private DatagramSocket server;
 	private DatagramSocket client;
+	private final int port = 12345;
 
 	public Network(Queue<DatagramPacket> queue) {
 		predecessor = new Host();
@@ -42,6 +43,10 @@ public class Network {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public int getPort() {
+		return port;
 	}
 
 	public Host getAntecessor() {
@@ -101,7 +106,7 @@ public class Network {
 				receiver.requireJoin(stream, packet.getAddress());
 				break;
 			case 1:
-				receiver.requireLeave(stream);
+				receiver.requireLeave(stream, packet.getAddress());
 				break;
 			case 2:
 				receiver.requireLookUp(stream);
