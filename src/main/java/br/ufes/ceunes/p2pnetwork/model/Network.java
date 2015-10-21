@@ -102,48 +102,43 @@ public class Network {
 		DatagramPacket packet = new DatagramPacket(new byte[256], 256);
 		try {
 			server.receive(packet);
-			new Thread() {
-				public void run() {
-
-					ByteArrayInputStream stream = new ByteArrayInputStream(packet.getData());
-					int code = stream.read();
-					switch (code) {
-					case 0:
-						receiver.requireJoin(stream, packet.getAddress());
-						break;
-					case 1:
-						receiver.requireLeave(stream, packet.getAddress());
-						break;
-					case 2:
-						receiver.requireLookUp(stream);
-						break;
-					case 3:
-						receiver.requireUpdate(stream, packet.getAddress());
-						break;
-					case 128:
-						receiver.answerJoin(stream);
-						break;
-					case 129:
-						receiver.answerLeave(stream);
-						break;
-					case 130:
-						receiver.answerLookUp(stream);
-						break;
-					case 131:
-						receiver.answerUpdate(stream);
-						break;
-					default:
-						System.out.println("It seems something went wrong. Operation code invalid!");
-						break;
-					}
-				}
-			}.start();
+			ByteArrayInputStream stream = new ByteArrayInputStream(packet.getData());
+			int code = stream.read();
+			switch (code) {
+			case 0:
+				receiver.requireJoin(stream, packet.getAddress());
+				break;
+			case 1:
+				receiver.requireLeave(stream, packet.getAddress());
+				break;
+			case 2:
+				receiver.requireLookUp(stream);
+				break;
+			case 3:
+				receiver.requireUpdate(stream, packet.getAddress());
+				break;
+			case 128:
+				receiver.answerJoin(stream);
+				break;
+			case 129:
+				receiver.answerLeave(stream);
+				break;
+			case 130:
+				receiver.answerLookUp(stream);
+				break;
+			case 131:
+				receiver.answerUpdate(stream);
+				break;
+			default:
+				System.out.println("It seems something went wrong. Operation code invalid!");
+				break;
+			}
 		} catch (IOException e) {
 			System.out.println("No packet captured");
 		}
 	}
-	
-	void setBox(JTextField succIp, JTextField succId) {
+
+	public void setBox(JTextField succIp, JTextField succId) {
 		receiver.setBox(succIp, succId);
 	}
 

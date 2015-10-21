@@ -16,10 +16,11 @@ public class Main {
 
 		ConcurrentLinkedQueue<DatagramPacket> packets = new ConcurrentLinkedQueue<>();
 		Network net = new Network(packets);
-		MainScreen window = new MainScreen(packets, net);
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					MainScreen window = new MainScreen(packets, net);
 					window.getFrame().setVisible(true);
 					Timer timer = new Timer();
 					timer.scheduleAtFixedRate(new TimerTask() {

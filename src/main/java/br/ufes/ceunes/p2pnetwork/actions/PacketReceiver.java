@@ -35,6 +35,7 @@ public class PacketReceiver {
 		int oldAntecessorId = (int) antecessor.getId();
 		InetAddress oldAntecessorIp = antecessor.getIp();
 		if (host.getId() == lookingId) {
+			System.out.println("self id:" + host.getId() + " look id: " + lookingId);
 			failure = 0;
 		} else {
 			failure = 1;
@@ -48,6 +49,7 @@ public class PacketReceiver {
 
 	public void answerJoin(ByteArrayInputStream stream) {
 		byte confirmation = (byte) stream.read();
+		System.out.println(confirmation);
 		byte buffer[] = new byte[4];
 		stream.read(buffer, 0, 4);
 		long successorId = Converter.bytesToUnsignedInt(buffer);
@@ -178,7 +180,7 @@ public class PacketReceiver {
 		byte buffer[] = new byte[4];
 		stream.read(buffer, 0, 4);
 		stream.read(buffer, 0, 4);
-		int successorId = Converter.bytesToInt(buffer);
+		long successorId = Converter.bytesToUnsignedInt(buffer);
 		stream.read(buffer, 0, 4);
 		InetAddress successorIp = null;
 		try {
@@ -188,7 +190,7 @@ public class PacketReceiver {
 			e.printStackTrace();
 		}
 		succIp.setText(successorIp.getHostAddress());
-		succId.setText(Integer.toString(successorId));
+		succId.setText(Long.toString(successorId));
 		
 		//packets.add(PacketFactory.createSendJoin(successorIp, port, (int) host.getId()));
 	}

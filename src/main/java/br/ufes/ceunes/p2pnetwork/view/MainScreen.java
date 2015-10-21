@@ -260,6 +260,8 @@ public class MainScreen {
 
 		btnJoin.setBounds(381, 315, 117, 25);
 		frmDhtCircular.getContentPane().add(btnJoin);
+		
+		net.setBox(txSuccIp, txSuccId);
 
 
 	}
@@ -291,7 +293,9 @@ public class MainScreen {
 						txSuccIp.setText(invalid);
 					} else {
 						InetAddress contactIp = InetAddress.getByName(txContactIP.getText());
-						queue.add(PacketFactory.createRequireLookUp(contactIp, 12345,(int) net.getHost().getId(), net.getHost().getIp(), (int) Integer.getInteger(txtLookingId.getText())));
+						queue.add(PacketFactory.createRequireLookUp(contactIp, net.getPort(), (int) net.getHost().getId(),
+								net.getHost().getIp(), (int) Long.parseLong(txtLookingId.getText())));
+						System.out.println("Lookup enviado");
 					}
 				} catch (UnknownHostException e1) {
 
@@ -305,9 +309,9 @@ public class MainScreen {
 				InetAddress succIp;
 				try {
 					succIp = InetAddress.getByName(txSuccIp.getText());
-					int id = Integer.getInteger(txSuccId.getText());
-					queue.add(PacketFactory.createSendJoin(succIp, 12345, id));
+					queue.add(PacketFactory.createSendJoin(succIp, net.getPort(), (int) net.getHost().getId()));
 					btnCreate.setEnabled(false);
+					btnJoin.setEnabled(false);
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -334,7 +338,7 @@ public class MainScreen {
 				net.createNode(getIp(intfBox.getSelectedIndex()));
 				btnCreate.setEnabled(false);
 				btnJoin.setEnabled(false);
-				txContactIP.setEditable(false);
+				//txContactIP.setEditable(false);
 				setNeighborhood();
 			}
 		});
@@ -351,6 +355,7 @@ public class MainScreen {
 			public void actionPerformed(ActionEvent e) {
 				btnCreate.setEnabled(true);
 				btnJoin.setEnabled(true);
+				txContactIP.setEditable(true);
 				Host antecessor = net.getAntecessor();
 				Host successor = net.getSuccessor();
 				// Sending message to antecessor
@@ -430,7 +435,7 @@ public class MainScreen {
 	public void refresh() {
 		setNeighborhood();
 		self_id.setText(Long.toString(net.getHost().getId()));
-		if (!txContactIP.isEditable()) {
+		if (!btnJoin.isEnabled()) {
 			txContactIP.setText(net.getSuccessor().getIp().getHostAddress());
 		}
 	}
