@@ -14,6 +14,8 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import javax.swing.JTextField;
+
 import br.ufes.ceunes.p2pnetwork.actions.Converter;
 import br.ufes.ceunes.p2pnetwork.actions.PacketFactory;
 import br.ufes.ceunes.p2pnetwork.actions.PacketReceiver;
@@ -139,6 +141,10 @@ public class Network {
 		} catch (IOException e) {
 			System.out.println("No packet captured");
 		}
+	}
+	
+	void setBox(JTextField succIp, JTextField succId) {
+		receiver.setBox(succIp, succId);
 	}
 
 }

@@ -48,10 +48,17 @@ public class MainScreen {
 	private JComboBox intfBox;
 	private JButton btnCreate;
 	private JButton btnLeave;
+	private JButton btnForceId;
 	private JButton btnLookup;
+	private JButton btnJoin;
+	private JButton btnSelfId;
 	private InetAddress contact;
 	private Queue<DatagramPacket> queue;
 	private Network net;
+	private JTextField txtLookingId;
+	private JTextField txContactIP;
+	private JTextField txSuccId;
+	private JTextField txSuccIp;
 
 	/**
 	 * Create the application.
@@ -69,7 +76,7 @@ public class MainScreen {
 		frmDhtCircular = new JFrame();
 		frmDhtCircular.setTitle("DHT Circular - Powered by Igor and Nikolas");
 		frmDhtCircular.setResizable(false);
-		frmDhtCircular.setBounds(100, 100, 538, 267);
+		frmDhtCircular.setBounds(100, 100, 538, 444);
 		frmDhtCircular.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDhtCircular.getContentPane().setLayout(null);
 
@@ -109,10 +116,6 @@ public class MainScreen {
 
 		btnCreate.setBounds(249, 48, 117, 25);
 		frmDhtCircular.getContentPane().add(btnCreate);
-
-		btnLookup = new JButton("Lookup");
-		btnLookup.setBounds(249, 75, 117, 25);
-		frmDhtCircular.getContentPane().add(btnLookup);
 
 		btnLeave = new JButton("Leave");
 
@@ -175,6 +178,13 @@ public class MainScreen {
 		suc_id.setBounds(384, 181, 114, 19);
 		frmDhtCircular.getContentPane().add(suc_id);
 		suc_id.setColumns(10);
+		
+		btnForceId = new JButton("Force ID");
+		btnSelfId = new JButton("Self Id");
+		btnJoin = new JButton("Join");
+
+		btnLookup = new JButton("Lookup");
+
 
 		setIp();
 
@@ -182,26 +192,75 @@ public class MainScreen {
 
 		self_id.setText(Long.toString(net.getHost().getId()));
 
-		JButton btnNewButton = new JButton("Force ID");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String strId = JOptionPane.showInputDialog(null, "Set ID!", "Enter you ID",
-						JOptionPane.QUESTION_MESSAGE);
-				int id = Integer.parseInt(strId);
-				net.getHost().setId(id);
-				if (net.getHost().getId() == net.getAntecessor().getId()) {
-					net.getAntecessor().setId(id);
-					net.getSuccessor().setId(id);
-				}
-			}
-		});
-		btnNewButton.setBounds(381, 75, 117, 25);
-		frmDhtCircular.getContentPane().add(btnNewButton);
-		
+
+
+		btnForceId.setBounds(315, 75, 117, 25);
+		frmDhtCircular.getContentPane().add(btnForceId);
+
 		JLabel lbPowered = new JLabel("Desenvolvido por Igor Sant'ana e Nikolas Serafini");
 		lbPowered.setFont(new Font("Dialog", Font.BOLD, 8));
-		lbPowered.setBounds(295, 210, 249, 15);
+		lbPowered.setBounds(287, 380, 249, 15);
 		frmDhtCircular.getContentPane().add(lbPowered);
+
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setBounds(29, 237, 483, 2);
+		frmDhtCircular.getContentPane().add(separator_3);
+
+		JLabel lblLookingId = new JLabel("Looking Id:");
+		lblLookingId.setBounds(31, 266, 96, 15);
+		frmDhtCircular.getContentPane().add(lblLookingId);
+
+		JLabel lblContactIp = new JLabel("Contact IP:");
+		lblContactIp.setBounds(31, 293, 111, 15);
+		frmDhtCircular.getContentPane().add(lblContactIp);
+
+		JLabel lblSuccessorId = new JLabel("Successor Id:");
+		lblSuccessorId.setBounds(31, 320, 96, 15);
+		frmDhtCircular.getContentPane().add(lblSuccessorId);
+
+		JLabel lblSuccessorIp = new JLabel("Successor IP:");
+		lblSuccessorIp.setBounds(31, 347, 96, 15);
+		frmDhtCircular.getContentPane().add(lblSuccessorIp);
+
+		JLabel lblLookup = new JLabel("Lookup");
+		lblLookup.setBounds(220, 240, 70, 15);
+		frmDhtCircular.getContentPane().add(lblLookup);
+
+		txtLookingId = new JTextField();
+		txtLookingId.setBounds(130, 264, 223, 19);
+		frmDhtCircular.getContentPane().add(txtLookingId);
+		txtLookingId.setColumns(10);
+
+		txContactIP = new JTextField();
+		txContactIP.setBounds(130, 291, 223, 19);
+		frmDhtCircular.getContentPane().add(txContactIP);
+		txContactIP.setColumns(10);
+
+		txSuccId = new JTextField();
+		txSuccId.setEditable(false);
+		txSuccId.setBounds(130, 318, 223, 19);
+		frmDhtCircular.getContentPane().add(txSuccId);
+		txSuccId.setColumns(10);
+
+		txSuccIp = new JTextField();
+		txSuccIp.setEditable(false);
+		txSuccIp.setBounds(130, 345, 223, 19);
+		frmDhtCircular.getContentPane().add(txSuccIp);
+		txSuccIp.setColumns(10);
+
+
+		btnSelfId.setBounds(381, 261, 117, 25);
+		frmDhtCircular.getContentPane().add(btnSelfId);
+
+
+
+		btnLookup.setBounds(381, 288, 117, 25);
+		frmDhtCircular.getContentPane().add(btnLookup);
+
+
+		btnJoin.setBounds(381, 315, 117, 25);
+		frmDhtCircular.getContentPane().add(btnJoin);
+
 
 	}
 
@@ -221,41 +280,77 @@ public class MainScreen {
 	}
 
 	private void listeners() {
-		btnCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				net.createNode(getIp(intfBox.getSelectedIndex()));
-				btnCreate.setEnabled(false);
-				btnLookup.setEnabled(false);
-				setNeighborhood();
-			}
-		});
-
+		
 		btnLookup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String ip = JOptionPane.showInputDialog(null, "What is contact IP?", "Enter you contact IP",
-						JOptionPane.QUESTION_MESSAGE);
-
 				try {
-					contact = InetAddress.getByName(ip);
+					Pattern p = Pattern.compile("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}");
+					if (!p.matcher(txContactIP.getText()).matches()) {
+						String invalid = "Invalid IP";
+						txSuccId.setText(invalid);
+						txSuccIp.setText(invalid);
+					} else {
+						InetAddress contactIp = InetAddress.getByName(txContactIP.getText());
+						queue.add(PacketFactory.createRequireLookUp(contactIp, 12345,(int) net.getHost().getId(), net.getHost().getIp(), (int) Integer.getInteger(txtLookingId.getText())));
+					}
+				} catch (UnknownHostException e1) {
+
+					
+				}
+			}
+		});
+		
+		btnJoin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				InetAddress succIp;
+				try {
+					succIp = InetAddress.getByName(txSuccIp.getText());
+					int id = Integer.getInteger(txSuccId.getText());
+					queue.add(PacketFactory.createSendJoin(succIp, 12345, id));
 					btnCreate.setEnabled(false);
-					queue.add(PacketFactory.createRequireLookUp(contact, 12345, (int) net.getHost().getId(),
-							net.getHost().getIp(), (int) net.getHost().getId()));
-					// btnLookup.setEnabled(false);
-					// setNeighborhood();
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
 			}
-
+		});
+		
+		btnForceId.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String strId = JOptionPane.showInputDialog(null, "Set ID!", "Enter you ID",
+						JOptionPane.QUESTION_MESSAGE);
+				int id = Integer.parseInt(strId);
+				net.getHost().setId(id);
+				if (net.getHost().getId() == net.getAntecessor().getId()) {
+					net.getAntecessor().setId(id);
+					net.getSuccessor().setId(id);
+				}
+			}
 		});
 
+		btnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				net.createNode(getIp(intfBox.getSelectedIndex()));
+				btnCreate.setEnabled(false);
+				btnJoin.setEnabled(false);
+				txContactIP.setEditable(false);
+				setNeighborhood();
+			}
+		});
+
+		
+		btnSelfId.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtLookingId.setText(Long.toString(net.getHost().getId()));
+			}
+		});
+		
 		btnLeave.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				btnCreate.setEnabled(true);
-				btnLookup.setEnabled(true);
+				btnJoin.setEnabled(true);
 				Host antecessor = net.getAntecessor();
 				Host successor = net.getSuccessor();
 				// Sending message to antecessor
@@ -268,6 +363,7 @@ public class MainScreen {
 			}
 
 		});
+
 
 		intfBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -284,6 +380,7 @@ public class MainScreen {
 			self_ip.setText(ip.getHostAddress());
 		}
 	}
+	
 
 	private InetAddress getIp(int index) {
 		Enumeration<NetworkInterface> nets;
@@ -333,5 +430,8 @@ public class MainScreen {
 	public void refresh() {
 		setNeighborhood();
 		self_id.setText(Long.toString(net.getHost().getId()));
+		if (!txContactIP.isEditable()) {
+			txContactIP.setText(net.getSuccessor().getIp().getHostAddress());
+		}
 	}
 }

@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Queue;
 
+import javax.swing.JTextField;
+
 import br.ufes.ceunes.p2pnetwork.model.Host;
 
 public class PacketReceiver {
@@ -15,6 +17,8 @@ public class PacketReceiver {
 	private Host antecessor;
 	private Queue<DatagramPacket> packets;
 	private final int port = 12345;
+	private JTextField succId;
+	private JTextField succIp;
 
 	public PacketReceiver(Host host, Host successor, Host antecessor, Queue<DatagramPacket> queue) {
 		this.host = host;
@@ -174,6 +178,7 @@ public class PacketReceiver {
 		byte buffer[] = new byte[4];
 		stream.read(buffer, 0, 4);
 		stream.read(buffer, 0, 4);
+		int successorId = Converter.bytesToInt(buffer);
 		stream.read(buffer, 0, 4);
 		InetAddress successorIp = null;
 		try {
@@ -182,7 +187,10 @@ public class PacketReceiver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		packets.add(PacketFactory.createSendJoin(successorIp, port, (int) host.getId()));
+		succIp.setText(successorIp.getHostAddress());
+		succId.setText(Integer.toString(successorId));
+		
+		//packets.add(PacketFactory.createSendJoin(successorIp, port, (int) host.getId()));
 	}
 
 	public void requireUpdate(ByteArrayInputStream stream, InetAddress fromIp) {
@@ -205,6 +213,12 @@ public class PacketReceiver {
 
 	public void answerUpdate(ByteArrayInputStream stream) {
 
+	}
+
+	public void setBox(JTextField succIp, JTextField succId) {
+		this.succIp = succIp;
+		this.succId = succId;
+		
 	}
 
 }
