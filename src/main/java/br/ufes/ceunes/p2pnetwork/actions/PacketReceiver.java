@@ -166,9 +166,9 @@ public class PacketReceiver {
 		 * true; }
 		 */
 
-		if (host.isNext(lookingId, successor.getId())) {
-			packets.add(PacketFactory.createAnswerLookUp(originIp, port, (int) lookingId, (int) successor.getId(),
-					successor.getIp()));
+		if (host.isBetween(lookingId, antecessor.getId())) {
+			packets.add(PacketFactory.createAnswerLookUp(originIp, port, (int) lookingId, (int) host.getId(),
+					host.getIp()));
 		} else {
 			packets.add(PacketFactory.createRequireLookUp(successor.getIp(), port, (int) originId, originIp,
 					(int) lookingId));
@@ -191,8 +191,9 @@ public class PacketReceiver {
 		}
 		succIp.setText(successorIp.getHostAddress());
 		succId.setText(Long.toString(successorId));
-		
-		//packets.add(PacketFactory.createSendJoin(successorIp, port, (int) host.getId()));
+
+		// packets.add(PacketFactory.createSendJoin(successorIp, port, (int)
+		// host.getId()));
 	}
 
 	public void requireUpdate(ByteArrayInputStream stream, InetAddress fromIp) {
@@ -220,7 +221,7 @@ public class PacketReceiver {
 	public void setBox(JTextField succIp, JTextField succId) {
 		this.succIp = succIp;
 		this.succId = succId;
-		
+
 	}
 
 }

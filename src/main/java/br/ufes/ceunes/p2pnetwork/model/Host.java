@@ -49,11 +49,26 @@ public class Host {
 			return true;
 		}
 		if (selfId > successorId) {
-			
+
 			if ((lookingId >= selfId && selfId <= limitUp) || (lookingId >= 0 && lookingId < successorId)) {
 				return true;
 			}
 		} else if (lookingId >= selfId && lookingId < successorId) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isBetween(long lookingId, long antecessorId) {
+		long selfId = Converter.intToUnsignedInt(this.id);
+		if (antecessorId == selfId) {
+			return true;
+		}
+		if (selfId < antecessorId) {
+			if ((lookingId > antecessorId && selfId <= limitUp) || (lookingId >= 0 && lookingId <= selfId)) {
+				return true;
+			}
+		} else if (lookingId > antecessorId && lookingId <= selfId) {
 			return true;
 		}
 		return false;
