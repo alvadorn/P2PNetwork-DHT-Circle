@@ -4,7 +4,7 @@
 
 	<groupId>br.ufes.ceunes</groupId>
 	<artifactId>p2pnetwork</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>p2pnetwork</name>
